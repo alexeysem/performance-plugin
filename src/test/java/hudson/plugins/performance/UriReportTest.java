@@ -1,9 +1,7 @@
 package hudson.plugins.performance;
 
-import static org.junit.Assert.*;
-
-import hudson.plugins.performance.HttpSample;
-import hudson.plugins.performance.UriReport;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
 

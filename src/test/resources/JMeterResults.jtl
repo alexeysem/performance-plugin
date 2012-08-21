@@ -2,7 +2,7 @@
 <testResults version="1.2">
 <httpSample t="14720" lt="9770" ts="1296846793179" s="true" lb="Home" rc="200" rm="OK" tn="Sesiones de usuario 1-2" dt="text" by="771065"/>
 <httpSample t="15902" lt="10954" ts="1296846792004" s="true" lb="Home" rc="200" rm="OK" tn="Sesiones de usuario 1-1" dt="text" by="771065"/>
-<httpSample t="278" lt="148" ts="1296846847952" s="true" lb="Workgroup" rc="200" rm="OK" tn="Sesiones de usuario 1-2" dt="text" by="744705"/>
+<httpSample t="12902" lt="148" ts="1296846847952" s="true" lb="Workgroup" rc="200" rm="OK" tn="Sesiones de usuario 1-2" dt="text" by="744705"/>
 <httpSample t="1017" lt="694" ts="1296846847222" s="true" lb="Workgroup" rc="200" rm="OK" tn="Sesiones de usuario 1-1" dt="text" by="744705"/>
 <httpSample t="598" lt="321" ts="1296846947037" s="true" lb="Home" rc="200" rm="OK" tn="Sesiones de usuario 1-1" dt="text" by="771149"/>
 <httpSample t="501" lt="298" ts="1296846947144" s="true" lb="Home" rc="200" rm="OK" tn="Sesiones de usuario 1-2" dt="text" by="771149"/>

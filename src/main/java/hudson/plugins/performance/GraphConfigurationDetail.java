@@ -2,8 +2,6 @@ package hudson.plugins.performance;
 
 import hudson.model.ModelObject;
 import hudson.model.AbstractProject;
-import hudson.plugins.performance.CookieHandler;
-
 
 import java.io.File;
 import java.io.FileInputStream;

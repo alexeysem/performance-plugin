@@ -1,16 +1,17 @@
 package hudson.plugins.performance;
 
-import hudson.model.AbstractBuild;
 import hudson.model.Action;
+import hudson.model.AbstractBuild;
 import hudson.util.StreamTaskListener;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.kohsuke.stapler.StaplerProxy;
 
 import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.ref.WeakReference;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.kohsuke.stapler.StaplerProxy;
 
 public class PerformanceBuildAction implements Action, StaplerProxy {
   private final AbstractBuild<?, ?> build;
