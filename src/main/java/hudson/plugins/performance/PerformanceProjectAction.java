@@ -373,8 +373,12 @@ public final class PerformanceProjectAction implements Action {
                         Messages.ProjectAction_Average(), label);
                 dataSetBuilderAverage.add(performanceReport.get90Line(),
                         Messages.ProjectAction_Line90(), label);
-                dataSetBuilderAverage.add(performanceReport.getPercentileLine(percentileSetting),
-                        Messages.ProjectAction_SLALine() + "(" + percentileSetting + ")", label);
+
+                final long percentileLine = performanceReport.getPercentileLine(percentileSetting);
+                if (percentileLine != -1) {
+                    dataSetBuilderAverage.add(percentileLine,
+                            Messages.ProjectAction_SLALine() + "(" + percentileSetting + ")", label);
+                }
             }
             nbBuildsToAnalyze--;
             continue;
