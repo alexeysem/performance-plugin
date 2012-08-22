@@ -30,7 +30,7 @@ public class PerformanceReport extends AbstractReport implements
     /**
      * {@link UriReport}s keyed by their {@link UriReport#getStaplerUri()}.
      */
-    private final Map<String, UriReport> uriReportMap = new LinkedHashMap<String, UriReport>();
+    protected final Map<String, UriReport> uriReportMap = new LinkedHashMap<String, UriReport>();
 
     private PerformanceReport lastBuildReport;
 

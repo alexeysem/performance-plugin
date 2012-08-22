@@ -53,12 +53,13 @@ public class JMeterAggregateParser extends PerformanceReportParser {
                 while (s.hasNextLine()) {
                     line = s.nextLine();
 
-                    if (line.startsWith("TOTAL")) {
+                    if (!line.startsWith("sampler_label")) {
+                        final boolean isTotal = line.startsWith("TOTAL");
+
                         final Scanner scanner = new Scanner(line);
                         scanner.useDelimiter(lineDelimeterPattern);
 
-                        // Skip first column
-                        scanner.next();
+                        final String uri = scanner.next();
 
                         final int samplesCount = scanner.nextInt();
                         final long averageTime = scanner.nextLong();
@@ -66,18 +67,31 @@ public class JMeterAggregateParser extends PerformanceReportParser {
                         final long aggregate90Percentile = scanner.nextLong();
                         final long minTime = scanner.nextLong();
                         final long maxTime = scanner.nextLong();
-                        final double errorPercentage = Double.valueOf(scanner.next());
+                        final float errorPercentage = Float.valueOf(scanner.next());
 
-                        aggregateReport.setSamplesCount(samplesCount);
-                        aggregateReport.setAverageTime(averageTime);
-                        aggregateReport.setAggregateMedian(aggregateMedian);
-                        aggregateReport.setAggregate90Percentile(aggregate90Percentile);
-                        aggregateReport.setMinTime(minTime);
-                        aggregateReport.setMaxTime(maxTime);
-                        aggregateReport.setErrorPercentage(errorPercentage);
+                        if (isTotal) {
+                            aggregateReport.setSamplesCount(samplesCount);
+                            aggregateReport.setAverageTime(averageTime);
+                            aggregateReport.setAggregateMedian(aggregateMedian);
+                            aggregateReport.setAggregate90Percentile(aggregate90Percentile);
+                            aggregateReport.setMinTime(minTime);
+                            aggregateReport.setMaxTime(maxTime);
+                            aggregateReport.setErrorPercentage(errorPercentage);
+                        } else {
+                            final AggregateUriReport uriReport = new AggregateUriReport(aggregateReport, uri);
+                            uriReport.setSamplesCount(samplesCount);
+                            uriReport.setAverageTime(averageTime);
+                            uriReport.setAggregateMedian(aggregateMedian);
+                            uriReport.setAggregate90Percentile(aggregate90Percentile);
+                            uriReport.setMinTime(minTime);
+                            uriReport.setMaxTime(maxTime);
+                            uriReport.setErrorPercentage(errorPercentage);
+                            aggregateReport.addUriReport(uriReport);
+                        }
                     }
-                    result.add(aggregateReport);
                 }
+
+                result.add(aggregateReport);
             } catch (final FileNotFoundException e) {
                 logger.println("File not found" + e.getMessage());
             }

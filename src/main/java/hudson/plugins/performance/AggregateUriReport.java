@@ -1,6 +1,8 @@
 package hudson.plugins.performance;
 
-public class AggregatePerformanceReport extends PerformanceReport {
+public class AggregateUriReport extends UriReport {
+
+    public final static String END_PERFORMANCE_PARAMETER = ".endperformanceparameter";
 
     private int samplesCount;
 
@@ -16,8 +18,15 @@ public class AggregatePerformanceReport extends PerformanceReport {
 
     private double errorPercentage;
 
-    public void addUriReport(UriReport uriReport) {
-        uriReportMap.put(uriReport.getStaplerUri(), uriReport);
+    public AggregateUriReport(AggregatePerformanceReport performanceReport, String uri) {
+        super(performanceReport, uri.replace("http:", "").replaceAll("/", "_"), uri);
+    }
+
+    public int compareTo(AggregateUriReport uriReport) {
+        if (uriReport == this) {
+            return 0;
+        }
+        return uriReport.getUri().compareTo(this.getUri());
     }
 
     @Override
