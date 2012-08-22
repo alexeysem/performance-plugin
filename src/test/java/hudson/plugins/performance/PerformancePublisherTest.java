@@ -10,7 +10,7 @@ import org.jvnet.hudson.test.HudsonTestCase;
  */
 public class PerformancePublisherTest extends HudsonTestCase {
     public void testConfigRoundtrip() throws Exception {
-        final PerformancePublisher before = new PerformancePublisher(10, 20, 99, 250, false,
+        final PerformancePublisher before = new PerformancePublisher(10, 20, 250, false,
                 asList(new JMeterParser("**/*.jtl")));
 
         final FreeStyleProject p = createFreeStyleProject();

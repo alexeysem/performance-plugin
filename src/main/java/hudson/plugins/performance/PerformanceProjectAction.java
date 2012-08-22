@@ -48,8 +48,6 @@ public final class PerformanceProjectAction implements Action {
 
     private static final long serialVersionUID = 1L;
 
-    private int percentileSetting;
-
     /** Logger. */
     private static final Logger LOGGER = Logger.getLogger(PerformanceProjectAction.class.getName());
 
@@ -69,9 +67,8 @@ public final class PerformanceProjectAction implements Action {
         return PLUGIN_NAME;
     }
 
-    public PerformanceProjectAction(AbstractProject project, int percentileSetting) {
+    public PerformanceProjectAction(AbstractProject project) {
         this.project = project;
-        this.percentileSetting = percentileSetting;
     }
 
     private JFreeChart createErrorsChart(CategoryDataset dataset) {
@@ -373,12 +370,6 @@ public final class PerformanceProjectAction implements Action {
                         Messages.ProjectAction_Average(), label);
                 dataSetBuilderAverage.add(performanceReport.get90Line(),
                         Messages.ProjectAction_Line90(), label);
-
-                final long percentileLine = performanceReport.getPercentileLine(percentileSetting);
-                if (percentileLine != -1) {
-                    dataSetBuilderAverage.add(percentileLine,
-                            Messages.ProjectAction_SLALine() + "(" + percentileSetting + ")", label);
-                }
             }
             nbBuildsToAnalyze--;
             continue;

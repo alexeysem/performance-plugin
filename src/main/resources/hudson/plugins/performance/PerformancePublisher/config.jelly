@@ -39,8 +39,7 @@
   
   <f:entry title="${%SLE threshhold}" description="${%SLE.description}">
   	<div>
-	    <f:textbox field="slePercentileThreshold" style="width:50px"/>
-	    th percentile is in 
+	    90th percentile is in
 	    <f:textbox field="sleTimeMillisec" style="width:50px"/>
 	    ms. threshold.
     </div>

@@ -49,7 +49,6 @@ public class PerformancePublisher extends Recorder {
         }
     }
 
-    private int slePercentileThreshold = 0;
     private int sleTimeMillisec = 0;
 
     private int errorFailedThreshold = 0;
@@ -72,13 +71,11 @@ public class PerformancePublisher extends Recorder {
     @DataBoundConstructor
     public PerformancePublisher(int errorFailedThreshold,
             int errorUnstableThreshold,
-            int slePercentileThreshold,
             int sleTimeMillisec,
             boolean modePerformancePerTestCase,
             List<? extends PerformanceReportParser> parsers) {
         this.errorFailedThreshold = errorFailedThreshold;
         this.errorUnstableThreshold = errorUnstableThreshold;
-        this.slePercentileThreshold = slePercentileThreshold;
         this.sleTimeMillisec = sleTimeMillisec;
         if (parsers == null) {
             parsers = Collections.emptyList();
@@ -97,7 +94,7 @@ public class PerformancePublisher extends Recorder {
 
     @Override
     public Action getProjectAction(AbstractProject<?, ?> project) {
-        return new PerformanceProjectAction(project, slePercentileThreshold);
+        return new PerformanceProjectAction(project);
     }
 
     public BuildStepMonitor getRequiredMonitorService() {
@@ -199,8 +196,6 @@ public class PerformancePublisher extends Recorder {
             logger.println("Performance: No threshold configured for making the test "
                     + Result.FAILURE.toString().toLowerCase());
         }
-        logger.println("SLE: threshold is: "
-                + slePercentileThreshold);
 
         // add the report to the build object.
         final PerformanceBuildAction a = new PerformanceBuildAction(build, logger,
@@ -245,11 +240,10 @@ public class PerformancePublisher extends Recorder {
                         && errorPercent - errorUnstableThreshold > thresholdTolerance) {
                     result = Result.UNSTABLE;
                 } else {
-                    final long percentileLine = r.getPercentileLine(slePercentileThreshold);
-                    logger.println("SLA: " + slePercentileThreshold + " is: " + percentileLine);
+                    final long percentileLine = r.get90Line();
                     if (percentileLine > sleTimeMillisec) {
-                        logger.println("Failed to fall under " + slePercentileThreshold + "th condition. Value is: "
-                                + percentileLine);
+                        logger.println("Failed to fall under 90th percentile threshold. Value is: "
+                                + percentileLine + " and the threshhold is " + sleTimeMillisec);
                         result = Result.FAILURE;
                     }
                 }
@@ -311,15 +305,6 @@ public class PerformancePublisher extends Recorder {
 
     public void setErrorUnstableThreshold(int errorUnstableThreshold) {
         this.errorUnstableThreshold = Math.max(0, Math.min(errorUnstableThreshold,
-                100));
-    }
-
-    public int getSlePercentileThreshold() {
-        return slePercentileThreshold;
-    }
-
-    public void setSlePercentileThreshold(int slePercentileThreshold) {
-        this.slePercentileThreshold = Math.max(0, Math.min(slePercentileThreshold,
                 100));
     }
 
