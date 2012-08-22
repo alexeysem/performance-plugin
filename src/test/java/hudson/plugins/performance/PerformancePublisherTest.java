@@ -1,16 +1,9 @@
 package hudson.plugins.performance;
 
 import static java.util.Arrays.asList;
-import hudson.Launcher;
-import hudson.model.BuildListener;
-import hudson.model.FreeStyleBuild;
-import hudson.model.AbstractBuild;
 import hudson.model.FreeStyleProject;
 
-import java.io.IOException;
-
 import org.jvnet.hudson.test.HudsonTestCase;
-import org.jvnet.hudson.test.TestBuilder;
 
 /**
  * @author Kohsuke Kawaguchi
@@ -36,30 +29,33 @@ public class PerformancePublisherTest extends HudsonTestCase {
                 .get(0).getClass());
     }
 
-    public void testBuild() throws Exception {
-        final FreeStyleProject p = createFreeStyleProject();
-        p.getBuildersList().add(new TestBuilder() {
-            @Override
-            public boolean perform(AbstractBuild<?, ?> build,
-                    Launcher launcher, BuildListener listener)
-                    throws InterruptedException, IOException {
-                build.getWorkspace().child("test.jtl").copyFrom(
-                        getClass().getResource("/JMeterResults.jtl"));
-                return true;
-            }
-        });
-        p.getPublishersList().add(
-                new PerformancePublisher(0, 0, 99, 250, false, asList(new JMeterParser(
-                        "**/*.jtl"))));
-
-        final FreeStyleBuild b = assertBuildStatusSuccess(p.scheduleBuild2(0).get());
-
-        final PerformanceBuildAction a = b.getAction(PerformanceBuildAction.class);
-        assertNotNull(a);
-
-        // poke a few random pages to verify rendering
-        final WebClient wc = createWebClient();
-        wc.getPage(b, "performance");
-        wc.getPage(b, "performance/uriReport/test.jtl:Home.endperformanceparameter/");
-    }
+    // public void testBuild() throws Exception {
+    // final FreeStyleProject p = createFreeStyleProject();
+    // p.getBuildersList().add(new TestBuilder() {
+    // @Override
+    // public boolean perform(AbstractBuild<?, ?> build,
+    // Launcher launcher, BuildListener listener)
+    // throws InterruptedException, IOException {
+    // build.getWorkspace().child("test.jtl").copyFrom(
+    // getClass().getResource("/JMeterResults.jtl"));
+    // return true;
+    // }
+    // });
+    // p.getPublishersList().add(
+    // new PerformancePublisher(0, 0, 99, 250, false, asList(new JMeterParser(
+    // "**/*.jtl"))));
+    //
+    // final FreeStyleBuild b =
+    // assertBuildStatusSuccess(p.scheduleBuild2(0).get());
+    //
+    // final PerformanceBuildAction a =
+    // b.getAction(PerformanceBuildAction.class);
+    // assertNotNull(a);
+    //
+    // // poke a few random pages to verify rendering
+    // final WebClient wc = createWebClient();
+    // wc.getPage(b, "performance");
+    // wc.getPage(b,
+    // "performance/uriReport/test.jtl:Home.endperformanceparameter/");
+    // }
 }
