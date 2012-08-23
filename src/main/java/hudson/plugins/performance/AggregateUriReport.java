@@ -36,7 +36,7 @@ public class AggregateUriReport extends UriReport {
 
     @Override
     public double errorPercent() {
-        return errorPercentage;
+        return errorPercentage * 100;
     }
 
     @Override

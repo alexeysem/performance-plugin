@@ -27,7 +27,7 @@ public class AggregatePerformanceReport extends PerformanceReport {
 
     @Override
     public double errorPercent() {
-        return errorPercentage;
+        return errorPercentage * 100;
     }
 
     @Override
