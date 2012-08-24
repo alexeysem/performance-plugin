@@ -194,8 +194,8 @@ public class UriReport extends AbstractReport implements ModelObject,
         return URLEncoder.encode(sb.toString(), "UTF-8");
     }
 
-    public void addLastBuildUriReport(UriReport lastBuildUriReport) {
-        this.lastBuildUriReport = lastBuildUriReport;
+    public void addLastBuildUriReport(UriReport report) {
+        this.lastBuildUriReport = report;
     }
 
     @Override

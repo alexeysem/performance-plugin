@@ -21,12 +21,17 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.kohsuke.stapler.DataBoundConstructor;
 
 public class PerformancePublisher extends Recorder {
+
+    private static final Logger LOGGER = Logger.getLogger(PerformancePublisher.class.getName());
+
     @Extension
     public static class DescriptorImpl extends BuildStepDescriptor<Publisher> {
         @Override
@@ -78,9 +83,10 @@ public class PerformancePublisher extends Recorder {
         this.errorUnstableThreshold = errorUnstableThreshold;
         this.sleTimeMillisec = sleTimeMillisec;
         if (parsers == null) {
-            parsers = Collections.emptyList();
+            this.parsers = Collections.emptyList();
+        } else {
+            this.parsers = new ArrayList<PerformanceReportParser>(parsers);
         }
-        this.parsers = new ArrayList<PerformanceReportParser>(parsers);
         this.modePerformancePerTestCase = modePerformancePerTestCase;
     }
 
@@ -154,8 +160,8 @@ public class PerformancePublisher extends Recorder {
             if (!files.isEmpty()) {
                 return files;
             }
-
         } catch (final IOException e) {
+            LOGGER.log(Level.SEVERE, "Error during the manage of the Calendar", e);
         }
 
         // Agoley: seems like this block doesn't work

@@ -75,11 +75,11 @@ public class PerformanceReport extends AbstractReport implements
 
     @Override
     public double errorPercent() {
-        if (buildAction.getPerformanceReportMap().ifSummarizerParserUsed(reportFileName)) {
-            return size() == 0 ? 0 : ((double) countErrors()) / size();
-        } else {
-            return size() == 0 ? 0 : ((double) countErrors()) / size() * 100;
+        double percentValue = size() == 0 ? 0 : ((double) countErrors()) / size();
+        if (!buildAction.getPerformanceReportMap().ifSummarizerParserUsed(reportFileName)) {
+            percentValue *= 100;
         }
+        return percentValue;
     }
 
     @Override
@@ -206,7 +206,6 @@ public class PerformanceReport extends AbstractReport implements
             final UriReport lastBuildUri = lastBuildUriReportMap.get(item.getKey());
             if (lastBuildUri != null) {
                 item.getValue().addLastBuildUriReport(lastBuildUri);
-            } else {
             }
         }
         this.lastBuildReport = lastBuildReport;

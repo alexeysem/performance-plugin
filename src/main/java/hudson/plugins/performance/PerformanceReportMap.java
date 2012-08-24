@@ -28,6 +28,7 @@ import org.kohsuke.stapler.StaplerResponse;
 /**
  * Root object of a performance report.
  */
+@SuppressWarnings("hiding")
 public class PerformanceReportMap implements ModelObject {
 
     /**
@@ -129,9 +130,8 @@ public class PerformanceReportMap implements ModelObject {
                     GraphConfigurationDetail.SEPARATOR);
             return getPerformanceReportMap().get(st.nextToken()).getUriReportMap().get(
                     st.nextToken());
-        } else {
-            return null;
         }
+        return null;
     }
 
     public String getUrlName() {

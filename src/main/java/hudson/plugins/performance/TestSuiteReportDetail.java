@@ -35,6 +35,7 @@ import org.kohsuke.stapler.StaplerResponse;
 /**
  * Configures the trend graph of this plug-in.
  */
+@SuppressWarnings("hiding")
 public class TestSuiteReportDetail implements ModelObject {
 
     private AbstractProject<?, ?> project;
@@ -71,6 +72,7 @@ public class TestSuiteReportDetail implements ModelObject {
         }
         final DataSetBuilder<String, NumberOnlyBuildLabel> dataSetBuilderAverage = new DataSetBuilder<String, NumberOnlyBuildLabel>();
         final List<? extends AbstractBuild<?, ?>> builds = getProject().getBuilds();
+
         final Range buildsLimits = this.buildsLimits;
 
         int nbBuildsToAnalyze = builds.size();
@@ -174,7 +176,6 @@ public class TestSuiteReportDetail implements ModelObject {
 
         final List<? extends AbstractBuild<?, ?>> builds = getProject().getBuilds();
 
-        int nbBuildsToAnalyze = builds.size();
         for (final AbstractBuild<?, ?> build : builds) {
 
             final PerformanceBuildAction performanceBuildAction = build.getAction(PerformanceBuildAction.class);
@@ -186,7 +187,6 @@ public class TestSuiteReportDetail implements ModelObject {
                     .getPerformanceReport(
                             performanceReportNameFile);
             if (performanceReport == null) {
-                nbBuildsToAnalyze--;
                 continue;
             }
 
@@ -200,8 +200,6 @@ public class TestSuiteReportDetail implements ModelObject {
                     performanceReportTestCaseList.add(sample.getUri());
                 }
             }
-
-            nbBuildsToAnalyze--;
         }
 
         Collections.sort(performanceReportTestCaseList);

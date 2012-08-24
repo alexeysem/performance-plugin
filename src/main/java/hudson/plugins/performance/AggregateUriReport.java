@@ -2,8 +2,6 @@ package hudson.plugins.performance;
 
 public class AggregateUriReport extends UriReport {
 
-    public final static String END_PERFORMANCE_PARAMETER = ".endperformanceparameter";
-
     private int samplesCount;
 
     private long averageTime;

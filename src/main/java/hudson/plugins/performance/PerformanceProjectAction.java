@@ -46,8 +46,6 @@ public final class PerformanceProjectAction implements Action {
 
     private static final String PLUGIN_NAME = "performance";
 
-    private static final long serialVersionUID = 1L;
-
     /** Logger. */
     private static final Logger LOGGER = Logger.getLogger(PerformanceProjectAction.class.getName());
 
@@ -472,35 +470,31 @@ public final class PerformanceProjectAction implements Action {
         if (graphConf.isBuildCount()) {
             if (graphConf.getBuildCount() <= 0) {
                 return all(builds);
-            } else {
-                final int first = builds.size() - graphConf.getBuildCount();
-                return new Range(first > 0 ? first + 1 : 1,
-                        builds.size());
             }
+            final int first = builds.size() - graphConf.getBuildCount();
+            return new Range(first > 0 ? first + 1 : 1,
+                    builds.size());
         } else if (graphConf.isBuildNth()) {
             if (graphConf.getBuildStep() <= 0) {
                 return all(builds);
-            } else {
-                return new Range(1, builds.size(), graphConf.getBuildStep());
             }
+            return new Range(1, builds.size(), graphConf.getBuildStep());
         } else if (graphConf.isDate()) {
             if (graphConf.isDefaultDates()) {
                 return all(builds);
-            } else {
-                int firstBuild = -1;
-                int lastBuild = -1;
-                int var = builds.size();
-                GregorianCalendar firstDate = null;
-                GregorianCalendar lastDate = null;
-                try {
-                    firstDate = GraphConfigurationDetail.getGregorianCalendarFromString(graphConf.getFirstDayCount());
-                    lastDate = GraphConfigurationDetail.getGregorianCalendarFromString(graphConf.getLastDayCount());
-                    lastDate.set(GregorianCalendar.HOUR_OF_DAY, 23);
-                    lastDate.set(GregorianCalendar.MINUTE, 59);
-                    lastDate.set(GregorianCalendar.SECOND, 59);
-                } catch (final ParseException e) {
-                    LOGGER.log(Level.SEVERE, "Error during the manage of the Calendar", e);
-                }
+            }
+            int firstBuild = -1;
+            int lastBuild = -1;
+            int var = builds.size();
+            GregorianCalendar firstDate = null;
+            GregorianCalendar lastDate = null;
+            try {
+                firstDate = GraphConfigurationDetail.getGregorianCalendarFromString(graphConf.getFirstDayCount());
+                lastDate = GraphConfigurationDetail.getGregorianCalendarFromString(graphConf.getLastDayCount());
+                lastDate.set(GregorianCalendar.HOUR_OF_DAY, 23);
+                lastDate.set(GregorianCalendar.MINUTE, 59);
+                lastDate.set(GregorianCalendar.SECOND, 59);
+
                 for (final Iterator<?> iterator = builds.iterator(); iterator.hasNext();) {
                     final AbstractBuild<?, ?> currentBuild = (AbstractBuild<?, ?>) iterator.next();
                     final GregorianCalendar buildDate = new GregorianCalendar();
@@ -513,8 +507,11 @@ public final class PerformanceProjectAction implements Action {
                     }
                     var--;
                 }
-                return new Range(firstBuild, lastBuild);
+            } catch (final ParseException e) {
+                LOGGER.log(Level.SEVERE, "Error during the manage of the Calendar", e);
             }
+
+            return new Range(firstBuild, lastBuild);
         }
         throw new IllegalArgumentException("unsupported configType + " + graphConf.getConfigType());
     }
@@ -562,12 +559,8 @@ public final class PerformanceProjectAction implements Action {
     }
 
     public boolean isTrendVisibleOnProjectDashboard() {
-        if (getPerformanceReportList() != null
-                && getPerformanceReportList().size() == 1) {
-            return true;
-        } else {
-            return false;
-        }
+        final List<String> reportList = getPerformanceReportList();
+        return reportList != null && reportList.size() == 1;
     }
 
     /**
@@ -723,9 +716,6 @@ public final class PerformanceProjectAction implements Action {
         public int last;
 
         public int step;
-
-        private Range() {
-        }
 
         public Range(int first, int last) {
             this.first = first;
