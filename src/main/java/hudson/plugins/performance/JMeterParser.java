@@ -111,11 +111,7 @@ public class JMeterParser extends PerformanceReportParser {
                         if ("httpSample".equalsIgnoreCase(qName)
                                 || "sample".equalsIgnoreCase(qName)) {
                             if (counter == 1) {
-                                try {
-                                    r.addSample(currentSample);
-                                } catch (final SAXException e) {
-                                    e.printStackTrace();
-                                }
+                                r.addSample(currentSample);
                             }
                             counter--;
                         }

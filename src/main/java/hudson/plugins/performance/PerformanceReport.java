@@ -2,15 +2,12 @@ package hudson.plugins.performance;
 
 import hudson.model.AbstractBuild;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.xml.sax.SAXException;
 
 /**
  * Represents a single performance report, which consists of multiple
@@ -32,9 +29,11 @@ public class PerformanceReport extends AbstractReport implements
      */
     protected final Map<String, UriReport> uriReportMap = new LinkedHashMap<String, UriReport>();
 
+    private List<HttpSample> samplesOrdered;
+
     private PerformanceReport lastBuildReport;
 
-    public void addSample(HttpSample pHttpSample) throws SAXException {
+    public void addSample(HttpSample pHttpSample) {
         final String uri = pHttpSample.getUri();
         if (uri == null) {
             buildAction
@@ -51,6 +50,17 @@ public class PerformanceReport extends AbstractReport implements
         }
         uriReport.addHttpSample(pHttpSample);
 
+    }
+
+    private List<HttpSample> getSamplesOrdered() {
+        if (samplesOrdered == null) {
+            samplesOrdered = new ArrayList<HttpSample>();
+            for (final UriReport currentReport : uriReportMap.values()) {
+                samplesOrdered.addAll(currentReport.getHttpSampleList());
+            }
+            Collections.sort(samplesOrdered);
+        }
+        return samplesOrdered;
     }
 
     public int compareTo(PerformanceReport jmReport) {
@@ -110,14 +120,9 @@ public class PerformanceReport extends AbstractReport implements
     @Override
     public long getPercentileLine(int percentile) {
         long result = 0;
-        final int size = size();
-        if (size != 0) {
-            final List<HttpSample> allSamples = new ArrayList<HttpSample>();
-            for (final UriReport currentReport : uriReportMap.values()) {
-                allSamples.addAll(currentReport.getHttpSampleList());
-            }
-            Collections.sort(allSamples);
-            result = allSamples.get((int) (allSamples.size() * (percentile / 100d))).getDuration();
+        if (size() != 0) {
+            final List<HttpSample> orderedSamples = getSamplesOrdered();
+            result = orderedSamples.get((int) (orderedSamples.size() * (percentile / 100d))).getDuration();
         }
         return result;
     }
@@ -139,7 +144,7 @@ public class PerformanceReport extends AbstractReport implements
         return Messages.Report_DisplayName();
     }
 
-    public UriReport getDynamic(String token) throws IOException {
+    public UriReport getDynamic(String token) {
         return getUriReportMap().get(token);
     }
 
@@ -149,20 +154,16 @@ public class PerformanceReport extends AbstractReport implements
 
     @Override
     public long getMax() {
-        long max = Long.MIN_VALUE;
-        for (final UriReport currentReport : uriReportMap.values()) {
-            max = Math.max(currentReport.getMax(), max);
-        }
-        return max;
+        final List<HttpSample> orderedSamples = getSamplesOrdered();
+        return orderedSamples.get(orderedSamples.size() - 1).getDuration();
     }
 
     @Override
     public long getMin() {
-        long min = Long.MAX_VALUE;
-        for (final UriReport currentReport : uriReportMap.values()) {
-            min = Math.min(currentReport.getMin(), min);
+        if (size() != 0) {
+            return getSamplesOrdered().get(0).getDuration();
         }
-        return min;
+        return 0;
     }
 
     public String getReportFileName() {
@@ -193,11 +194,7 @@ public class PerformanceReport extends AbstractReport implements
 
     @Override
     public int size() {
-        int size = 0;
-        for (final UriReport currentReport : uriReportMap.values()) {
-            size += currentReport.size();
-        }
-        return size;
+        return getSamplesOrdered().size();
     }
 
     public void setLastBuildReport(PerformanceReport lastBuildReport) {

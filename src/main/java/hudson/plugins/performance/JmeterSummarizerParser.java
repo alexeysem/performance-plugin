@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.Scanner;
 
 import org.kohsuke.stapler.DataBoundConstructor;
-import org.xml.sax.SAXException;
 
 /**
  * Created by IntelliJ IDEA. User: Agoley Date: 06.02.2012 Time: 12:45:24 To
@@ -102,8 +101,6 @@ public class JmeterSummarizerParser extends PerformanceReportParser {
 
             } catch (final FileNotFoundException e) {
                 logger.println("File not found" + e.getMessage());
-            } catch (final SAXException e) {
-                logger.println(e.getMessage());
             }
         }
 
